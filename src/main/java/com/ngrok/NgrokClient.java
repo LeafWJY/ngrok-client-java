@@ -29,7 +29,7 @@ public class NgrokClient  {
     static final String HOST = "codewjy.top";
     static final int PORT = 4454;
     static final int REMORTE_PORT = 55499;
-    static final int LOCAL_PORT = 3306;
+    static final int LOCAL_PORT = 8080;
 
     public static void main(String[] args) {
         new NgrokClient().start();

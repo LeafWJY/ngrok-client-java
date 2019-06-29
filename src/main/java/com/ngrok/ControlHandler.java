@@ -24,8 +24,8 @@ public class ControlHandler extends SimpleChannelInboundHandler<ByteBuf> {
     private String clientId;
     private static NioEventLoopGroup group = new NioEventLoopGroup(1);
     private static final String AUTH = "{\"Type\": \"Auth\", \"Payload\": {\"ClientId\": \"\", \"OS\": \"darwin\", \"Arch\": \"amd64\", \"Version\": \"2\", \"MmVersion\": \"1.7\", \"User\": \"user\", \"Password\": \"\"}}";
-    private static final String AUTH_RESP = "{\"Type\": \"ReqTunnel\", \"Payload\": {\"ReqId\": \"jhnl8GF3\", \"Protocol\": \"tcp\", \"Hostname\": \"\", \"Subdomain\": \"www\", \"HttpAuth\": \"\", \"RemotePort\": " + NgrokClient.REMORTE_PORT + "}}";
-
+    private static final String REQ_TUNNEL = "{\"Type\": \"ReqTunnel\", \"Payload\": {\"ReqId\": \"jhnl8GF3\", \"Protocol\": \"tcp\", \"Hostname\": \"\", \"Subdomain\": \"www\", \"HttpAuth\": \"\", \"RemotePort\": " + NgrokClient.REMORTE_PORT + "}}";
+    private static final String PING = "{\"Type\": \"Ping\", \"Payload\": {}}";
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
@@ -41,8 +41,8 @@ public class ControlHandler extends SimpleChannelInboundHandler<ByteBuf> {
                 JSONObject jsonObject = JSON.parseObject(charSequence.toString());
                 if ("AuthResp".equals(jsonObject.get("Type"))) {
                     clientId = jsonObject.getJSONObject("Payload").getString("ClientId");
-                    ctx.channel().writeAndFlush(GenericUtil.getByteBuf("{\"Type\": \"Ping\", \"Payload\": {}}"));
-                    ctx.channel().writeAndFlush(GenericUtil.getByteBuf(AUTH_RESP));
+                    ctx.channel().writeAndFlush(GenericUtil.getByteBuf(PING));
+                    ctx.channel().writeAndFlush(GenericUtil.getByteBuf(REQ_TUNNEL));
                 }else if ("ReqProxy".equals(jsonObject.get("Type"))) {
                     Bootstrap b = new Bootstrap();
                     try {

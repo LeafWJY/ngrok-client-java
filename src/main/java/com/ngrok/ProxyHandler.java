@@ -21,6 +21,7 @@ public class ProxyHandler extends ChannelInboundHandlerAdapter {
     private String REG_PROXY;
     private boolean init = false;
     private ChannelFuture f;
+    private static NioEventLoopGroup group = new NioEventLoopGroup(1);
 
     ProxyHandler(String clientId) {
         this.REG_PROXY = "{\"Type\": \"RegProxy\", \"Payload\": {\"ClientId\": \"" + clientId + "\"}}";
@@ -42,7 +43,6 @@ public class ProxyHandler extends ChannelInboundHandlerAdapter {
                     JSONObject jsonObject = JSON.parseObject(charSequence.toString());
                     if ("StartProxy".equals(jsonObject.get("Type"))) {
                         logger.info("=====StartProxy=====");
-                        NioEventLoopGroup group = new NioEventLoopGroup(1);
                         Bootstrap b = new Bootstrap();
                         b.group(group)
                                 .channel(NioSocketChannel.class)
